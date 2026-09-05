@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  collabflow_server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: collabflow_server
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    restart: always
+
+  collabflow_client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: collabflow_client
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_SOCKET_URL=http://localhost:4000
+    depends_on:
+      - collabflow_server
+    restart: always
